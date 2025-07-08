@@ -27,6 +27,7 @@
     <!-- begin region dependency injections -->
     <dependencySupport coordinate="org.springframework:spring-context" kind="java"/>
     <iconLayerProvider implementation="com.hexagram2021.springpluginlite.icons.BeanIconProvider"/>
+    <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.hexagram2021.springpluginlite.insights.BeanLineMarkerProvider"/>
     <!-- end region -->
   </extensions>
 </idea-plugin>
