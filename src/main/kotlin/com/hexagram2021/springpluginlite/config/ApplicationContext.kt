@@ -40,7 +40,7 @@ class ApplicationContext(private val project: Project, private var xml: XmlDocum
 
     inner class ApplicationContextList(private val key: String) : AbstractMutableList<String?>() {
         private val parent: XmlTag?
-            get() = xml.rootTag
+            get() = xml.rootTag?.takeIf { xmlTag -> "beans".equals(xmlTag.name) }
         val array: Array<XmlTag?>?
             get() = parent?.findSubTags(key)
 
@@ -52,7 +52,7 @@ class ApplicationContext(private val project: Project, private var xml: XmlDocum
             if (index < 0 || index > oldSize) {
                 throw IndexOutOfBoundsException(index.toString())
             }
-            val arr = xml.rootTag
+            val arr = parent
             if (arr == null) {
                 return
             }

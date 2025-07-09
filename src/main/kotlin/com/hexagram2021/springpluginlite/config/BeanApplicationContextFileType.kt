@@ -12,16 +12,15 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlFile
 
 interface BeanApplicationContextFileType : FileTypeIdentifiableByVirtualFile {
-    fun getFilenameRegex(): Regex
-    override fun isMyFileType(file: VirtualFile) = file.name.contains(getFilenameRegex())
+    val filenameRegex: Regex
+    override fun isMyFileType(file: VirtualFile) = file.name.contains(filenameRegex)
 
     override fun getDefaultExtension() = ""
     override fun getIcon() = DependencyInjectionAssets.BEAN_ICON
 
     object Xml : XmlLikeFileType(XMLLanguage.Companion.INSTANCE), BeanApplicationContextFileType {
-        private val filenameRegex = "^applicationContext\\.xml$".toRegex()
+        override val filenameRegex = "^applicationContext\\.xml$".toRegex()
 
-        override fun getFilenameRegex(): Regex = filenameRegex
         override fun getName() = "Application Context"
         override fun getDescription() = "Application context for spring beans"
     }
