@@ -28,6 +28,7 @@
     <dependencySupport coordinate="org.springframework:spring-context" kind="java"/>
     <iconLayerProvider implementation="com.hexagram2021.springpluginlite.icons.BeanIconProvider"/>
     <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.hexagram2021.springpluginlite.insights.BeanLineMarkerProvider"/>
+    <fileType name="Application Context" language="XML" implementationClass="com.hexagram2021.springpluginlite.config.BeanApplicationContextFileType$Xml" fieldName="INSTANCE" extensions="xml"/>
     <!-- end region -->
   </extensions>
 </idea-plugin>

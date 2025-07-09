@@ -2,6 +2,7 @@ package com.hexagram2021.springpluginlite.insights
 
 import com.hexagram2021.springpluginlite.assets.DependencyInjectionAssets
 import com.hexagram2021.springpluginlite.utils.autoWiredAnnotation
+import com.hexagram2021.springpluginlite.utils.definedXmlTags
 import com.hexagram2021.springpluginlite.utils.isAutoWired
 import com.hexagram2021.springpluginlite.utils.isBean
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
@@ -9,16 +10,18 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.codeInsight.navigation.getPsiElementPopup
+import com.intellij.execution.JavaExecutionUtil
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.*
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.PsiNavigateUtil
 import java.awt.event.MouseEvent
 
 class BeanLineMarkerProvider : LineMarkerProviderDescriptor() {
-    override fun getName() = "Mixin element line marker"
+    override fun getName() = "Bean element line marker"
     override fun getIcon() = DependencyInjectionAssets.BEAN_ELEMENT_ICON
 
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiIdentifier>? {
@@ -92,9 +95,21 @@ class BeanLineMarkerProvider : LineMarkerProviderDescriptor() {
                 return null
             }
             val clazz = type.resolve() ?: return null
-            return ClassInheritorsSearch.search(clazz).plus(clazz).mapNotNull {
+            var resolves = ClassInheritorsSearch.search(clazz).plus(clazz).mapNotNull {
                 it?.takeIf { it.isBean }
-            }.toList()
+            }
+            val definedXmlTags = clazz.definedXmlTags
+            if (definedXmlTags != null) {
+                val xmlTags = definedXmlTags.mapNotNull {
+                    xmlTag -> xmlTag.getAttribute("class")?.value
+                }.mapNotNull {
+                    name ->
+                    val findModule = JavaExecutionUtil.findModule(clazz) ?: return null
+                    JavaPsiFacade.getInstance(clazz.project).findClass(name, GlobalSearchScope.moduleScope(findModule))
+                }
+                resolves = resolves.plus(xmlTags)
+            }
+            return resolves
         }
     }
 }
