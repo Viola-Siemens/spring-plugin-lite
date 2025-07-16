@@ -30,6 +30,8 @@
     <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.hexagram2021.springpluginlite.insights.BeanLineMarkerProvider"/>
     <fileType name="Application Context" language="XML" implementationClass="com.hexagram2021.springpluginlite.config.BeanApplicationContextFileType$Xml" fieldName="INSTANCE"/>
     <lang.inspectionSuppressor language="JAVA" implementationClass="com.hexagram2021.springpluginlite.inspection.suppress.AutowiredInspectionSuppressor"/>
+    <lang.inspectionSuppressor language="JAVA" implementationClass="com.hexagram2021.springpluginlite.inspection.suppress.BeanInspectionSuppressor"/>
+    <lang.inspectionSuppressor language="JAVA" implementationClass="com.hexagram2021.springpluginlite.inspection.suppress.ConfigurationInspectionSuppressor"/>
     <!-- end region -->
   </extensions>
 </idea-plugin>
