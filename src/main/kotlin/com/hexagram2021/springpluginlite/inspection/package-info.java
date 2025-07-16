@@ -1,0 +1,1 @@
+package com.hexagram2021.springpluginlite.inspection;

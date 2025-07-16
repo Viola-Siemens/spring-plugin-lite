@@ -3,18 +3,25 @@ package com.hexagram2021.springpluginlite.utils
 import com.hexagram2021.springpluginlite.config.BeanApplicationContextFileType
 import com.hexagram2021.springpluginlite.utils.DependencyInjectionConstants.Annotations.AUTO_WIRED
 import com.hexagram2021.springpluginlite.utils.DependencyInjectionConstants.Annotations.COMPONENT
-import com.hexagram2021.springpluginlite.utils.DependencyInjectionConstants.Annotations.SERVICE
 import com.intellij.execution.JavaExecutionUtil
+import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiMember
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlTag
+import java.util.*
 
 val PsiClass.isBean
-    get() = beanAnnotation != null || definedXmlTags != null
+    get() = !beanAnnotations.isEmpty() || definedXmlTags != null
 
-val PsiClass.beanAnnotation
-    get() = modifierList?.findAnnotation(COMPONENT) ?: modifierList?.findAnnotation(SERVICE)
+val PsiClass.beanAnnotations: List<PsiAnnotation>
+    get() {
+        if(this.isAnnotationType) {
+            return Collections.emptyList()
+        }
+        return this.annotations.filterNotNull()
+            .filter { it.hasQualifiedName(COMPONENT) || (it.resolveAnnotationType()?.hasAnnotation(COMPONENT) ?: false) }
+    }
 
 val PsiClass.definedXmlTags: List<XmlTag>?
     get() {
