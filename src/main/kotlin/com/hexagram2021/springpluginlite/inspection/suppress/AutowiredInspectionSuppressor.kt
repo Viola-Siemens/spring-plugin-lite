@@ -16,7 +16,7 @@ class AutowiredInspectionSuppressor : InspectionSuppressor {
         val field = element.parent as? PsiField ?: return false
 
         // Skip nullable warnings for @Autowired fields
-        if (toolId == "NullableProblems" || toolId == "NotNullFieldNotInitialized" || toolId == "unused") {
+        if (toolId == "NullableProblems" || toolId == "NotNullFieldNotInitialized" || toolId == "unused" || toolId == "MismatchedQueryAndUpdateOfCollection") {
             return field.modifierList?.findAnnotation(Annotations.AUTO_WIRED) != null
         }
 
